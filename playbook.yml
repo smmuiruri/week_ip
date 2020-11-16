@@ -10,14 +10,15 @@
         - git
 
     - name: Check if the git repository exists
-      stat: path=/opt/week4_ip
-      register: repo_stat
+      stat: path=/opt/yolo
+      register: yolo_repo
 
     - name: Fetch the Github repository
       git:
-        repo: https://github.com/smmuiruri
-        dest: /opt/week4_ip
-      when: not repo_stat.stat.exists      
+        repo: https://github.com/smmuiruri/week_ip.git
+        dest: /opt/yolo
+      when: not yolo_repo.stat.exists      
 
     - include: tasks/mongodb.yml
-    - include: tasks/nodejs.yml
+    - include: tasks/client.yml
+    - include:  tasks/backend.yml

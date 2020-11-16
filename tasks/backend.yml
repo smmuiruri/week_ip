@@ -1,0 +1,31 @@
+- name: Install nodejs and npm 
+  apt:
+    state: present
+    name:
+      -nodejs
+      -npm
+- name: check if backend exist
+  object: path=/opt/yolo/backend
+  register: git_repo
+- name: copy the backend
+  command: mv /opt/yolo/backend /home/vagrant
+  when: git_repo.stat.exists
+- name: Install required modules in package.json
+  command: chdir=/home/vagrant/backend npm Install
+- name: Install PM2 to run client
+  command: chdir=/home/vagrant/client npm install pm2 -g
+- name: Spawn pm2 to become active
+  become: yes
+  become_user: vagrant
+  command: pm2 list
+- name: Configure PM2 to start automatically on system bootup
+  command: pm2 startup
+- name: Start the client using PM2
+  become: yes
+  become_user: vagrant
+  command: >
+    chdir=/home/vagrant/client 
+    pm2 start --name yolo_app npm -- start
+- name: Save the list of process for automatic restart after a system reboot
+  command: pm2 save
+  when: inventory_hostname == "backend"
