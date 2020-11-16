@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: Install packages
+      apt: name={{ item }} state=present update_cache=yes
+      with_items:
+        - build-essential
+        - git
+
+    - name: Check if the git repository exists
+      stat: path=/opt/week4_ip
+      register: repo_stat
+
+    - name: Fetch the Github repository
+      git:
+        repo: https://github.com/smmuiruri
+        dest: /opt/week4_ip
+      when: not repo_stat.stat.exists      
+
+    - include: tasks/mongodb.yml
+    - include: tasks/nodejs.yml
