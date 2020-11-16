@@ -5,7 +5,7 @@
       -nodejs
       -npm
 - name: check if backend exist
-  object: path=/opt/yolo/backend
+  stat: path=/opt/yolo/backend
   register: git_repo
 - name: copy the backend
   command: mv /opt/yolo/backend /home/vagrant

@@ -1,14 +1,21 @@
 ---
 
-- name: Fetch 10Gen / MongoDB signing key
-  apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10
+- name: MongoDB | Fetch GPG key 
+  sudo: yes 
+  command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 
+  tags: mongodb
 
-- name: Add Mongo repository
-  template: src=mongodb.list dest=/etc/apt/sources.list.d/mongodb.list
+- name: MongoDB | Add 10 gen repository 
+  sudo: yes 
+  shell: 
+    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/10gen.list creates=/etc/apt/sources.list.d/10gen.list
 
-- name: Install latest MongoDB release
-  apt: pkg=mongodb-org update_cache=yes
+- name: MongoDB | Install latest mongodb 
+  sudo: yes 
+  apt: pkg=mongodb-10gen update-cache=yes 
+  tags: mongodb
 
-- name: Ensure MongoDB is running
-  service: name=mongod state=started
-
+- name: MongoDB | Run mongo daemon 
+  sudo: yes 
+  service: name=mongodb state=started 
+  tags: mongodb
