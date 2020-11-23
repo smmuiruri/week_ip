@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Frontend 
   config.vm.define "client" do |app|
-    app.vm.hostname = "fontend"
+    app.vm.hostname = "client"
     app.vm.network :private_network, ip: "192.168.47.5"
   end
 
